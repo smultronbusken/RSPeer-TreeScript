@@ -1,8 +1,9 @@
 package com.smultron.treescript;
 
-import org.rspeer.script.LoopTask;
+import org.rspeer.script.Script;
+import org.rspeer.ui.Log;
 
-public abstract class TreeScript extends LoopTask
+public abstract class TreeScript extends Script
 {
     private TreeTask task;
 
@@ -15,6 +16,7 @@ public abstract class TreeScript extends LoopTask
 	    if(task == null)
 		throw new IllegalStateException("Root task is null.");
 	}
+
 	while(!task.isLeaf()){
 	    if(task.validate()){
 		task = task.successTask();
@@ -26,8 +28,9 @@ public abstract class TreeScript extends LoopTask
 		    throw new IllegalStateException("Failure is task null.");
 	    }
 	}
-	task.execute();
-	return 0;
+	int returnValue = task.execute();
+	task = null;
+	return returnValue;
     }
 
     public abstract TreeTask onCreateRoot();
